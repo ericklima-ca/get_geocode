@@ -1,6 +1,6 @@
 # GetGeocode
 
-**TODO: Add description**
+![workflow](https://github.com/ericklima-ca/get_geocode/actions/workflows/elixir.yml/badge.svg)
 
 ## Installation
 
