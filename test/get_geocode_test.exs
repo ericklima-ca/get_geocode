@@ -1,3 +1,0 @@
-defmodule GetGeocodeTest do
-  
-end
