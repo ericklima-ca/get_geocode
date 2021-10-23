@@ -18,4 +18,5 @@ defmodule GetGeocode.Apis.ViaCep do
         |> String.replace("-", "")
         |> String.replace(" ", "")
     end
+
 end

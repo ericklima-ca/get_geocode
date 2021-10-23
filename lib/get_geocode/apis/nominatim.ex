@@ -20,4 +20,5 @@ defmodule GetGeocode.Apis.Nominatim do
         @url
         |> String.replace("<QUERY>", query_sanitized)
     end
+
 end
