@@ -4,8 +4,8 @@ defmodule GetGeocode.Builder do
 
   def get_geocode(input) do
     cond do
-      is_cep?(input) -> get_viacep(input)
-      is_addr?(input) -> get_nominatim(input)
+      cep?(input) -> get_viacep(input)
+      addr?(input) -> get_nominatim(input)
       true -> Jason.encode!(%{msg: "Invalid input"})
     end
   end
@@ -20,12 +20,12 @@ defmodule GetGeocode.Builder do
     |> builder_from_nominatim()
   end
 
-  defp is_addr?(addr) do
+  defp addr?(addr) do
     addr
     |> String.match?(~r/([a-zA-Z]+[\s|,]+[a-zA-Z]+[\s]*)/)
   end
 
-  defp is_cep?(cep) do
+  defp cep?(cep) do
     cep
     |> String.match?(~r/\b([0-9]{5}-?[0-9]{3})$/)
   end
