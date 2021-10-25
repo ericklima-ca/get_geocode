@@ -2,22 +2,22 @@ defmodule GetGeocode.Builder do
   alias GetGeocode.Apis.{ViaCep, Nominatim}
   alias GetGeocode.Geocode
 
-  def get_geocode(input) do
+  def get_geocode(input, format \\ :api) do
     cond do
-      cep?(input) -> get_viacep(input)
-      addr?(input) -> get_nominatim(input)
-      true -> Jason.encode!(%{msg: "Invalid input"})
+      cep?(input) -> get_viacep(input, format)
+      addr?(input) -> get_nominatim(input, format)
+      true -> msg_invalid_input(format)
     end
   end
 
-  defp get_viacep(cep) do
+  defp get_viacep(cep, format) do
     ViaCep.get_cep(cep)
-    |> builder_from_viacep()
+    |> builder_from_viacep(format)
   end
 
-  defp get_nominatim(addr) do
+  defp get_nominatim(addr, format) do
     Nominatim.get_data(addr)
-    |> builder_from_nominatim()
+    |> builder_from_nominatim(format)
   end
 
   defp addr?(addr) do
@@ -30,7 +30,7 @@ defmodule GetGeocode.Builder do
     |> String.match?(~r/\b([0-9]{5}-?[0-9]{3})$/)
   end
 
-  defp builder_from_viacep(result) do
+  defp builder_from_viacep(result, format) do
     %{
       "bairro" => neighborhood,
       "cep" => postalcode,
@@ -47,19 +47,22 @@ defmodule GetGeocode.Builder do
       Regex.replace(~r/(.)\1+/, ~s[#{street},#{neighborhood},#{city}], "\\1")
       |> Nominatim.get_data()
 
-    Jason.encode!(%Geocode{
-      postalcode: postalcode,
-      street: street,
-      state: state,
-      city: city,
-      neighborhood: neighborhood,
-      lng: lng,
-      lat: lat,
-      full_details: full_details
-    })
+    wrap_data(
+      format,
+      [
+        postalcode,
+        street,
+        state,
+        city,
+        neighborhood,
+        lng,
+        lat,
+        full_details
+      ]
+    )
   end
 
-  defp builder_from_nominatim(result) do
+  defp builder_from_nominatim(result, format) do
     %{
       "display_name" => full_details,
       "lat" => lat,
@@ -71,15 +74,34 @@ defmodule GetGeocode.Builder do
       |> String.split(",")
       |> Enum.map(fn x -> String.trim(x) end)
 
-    Jason.encode!(%Geocode{
-      postalcode: postalcode,
-      street: street,
-      state: state,
-      city: city,
-      neighborhood: neighborhood,
-      lng: lng,
-      lat: lat,
-      full_details: full_details
-    })
+    wrap_data(
+      format,
+      [
+        postalcode,
+        street,
+        state,
+        city,
+        neighborhood,
+        lng,
+        lat,
+        full_details
+      ]
+    )
+  end
+
+  defp wrap_data(format, inputs) do
+    case format do
+      :api -> Jason.encode!(Geocode.constructor(inputs))
+      :map -> Geocode.constructor(inputs)
+      _ -> "Invalid format!"
+    end
+  end
+
+  defp msg_invalid_input(format) do
+    case format do
+      :api -> Jason.encode!(%{msg: "Invalid input"})
+      :map -> %{msg: "Invalid input"}
+      _ -> "Invalid format!"
+    end
   end
 end
