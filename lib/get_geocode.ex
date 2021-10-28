@@ -19,13 +19,21 @@ defmodule GetGeocode do
   end
 
   defp get_viacep(cep) do
-    ViaCep.get_cep(cep)
-    |> builder_from_viacep()
+    result = ViaCep.get_cep(cep)
+
+    case result do
+      %{"erro" => _} -> msg_invalid_input()
+      _ -> builder_from_viacep(result)
+    end
   end
 
   defp get_nominatim(addr) do
-    Nominatim.get_data(addr)
-    |> builder_from_nominatim()
+    result = Nominatim.get_data(addr)
+
+    case result do
+      {_, _} -> result
+      _ -> builder_from_nominatim(result)
+    end
   end
 
   defp addr?(addr) do

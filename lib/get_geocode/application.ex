@@ -8,7 +8,7 @@ defmodule GetGeocode.Application do
   def start(_type, _args) do
     children = [
       # Starts a worker by calling: GetGeocode.Worker.start_link(arg)
-      # {GetGeocode.Worker, arg}
+      # {GetGeocodeCash, %{}}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

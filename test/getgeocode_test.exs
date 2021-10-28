@@ -16,8 +16,24 @@ defmodule GetGeocodeTest do
     error = get(1)
     assert error == {:error, "Invalid input"}
   end
-  test "get/0 returning error message in no input suplied" do
+
+  test "get/0 returning error message with no input supplied" do
     error = get()
+    assert error == {:error, "Invalid input"}
+  end
+
+  test "get/1 returning 'No result' return from nominatim" do
+    error = get("asdasdasd asdasdasd")
+    assert error == {:ok, "No result"}
+  end
+
+  test "get/1 returning error from viacep with CEP invalid" do
+    error = get("12345678")
+    assert error == {:error, "Invalid input"}
+  end
+
+  test "get/1 returning error 'cause the input is neither cep nor the address " do
+    error = get("asdasdasdasdasdasdasdasdasd")
     assert error == {:error, "Invalid input"}
   end
 end
