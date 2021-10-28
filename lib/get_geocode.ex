@@ -2,6 +2,31 @@ defmodule GetGeocode do
   alias GetGeocode.Apis.{ViaCep, Nominatim}
   alias GetGeocode.Geocode
 
+  @moduledoc """
+  The main module with `get/1` function to retrieve data from CEP (brazilian format) or full address format (Nominatim).
+  """
+  @moduledoc since: "0.0.1"
+
+  @doc """
+  Gets geodata from `input`.
+  Returns a tuple with `{:ok, %GetGeocode.Geocode{}}`.
+
+  ## Examples
+    ```
+    iex> GetGeocode.get "69030000"
+    {:ok,
+    %GetGeocode.Geocode{
+      city: "Manaus",
+      full_details: "Rua Izaurina Braga, Compensa, Manaus, Região Geográfica Imediata de Manaus, Região Geográfica Intermediária de Manaus, Amazonas, Região Norte, 69000-000, Brasil",
+      lat: "-3.1054153",
+      lng: "-60.0547259",
+      neighborhood: "Compensa",
+      postalcode: "69030-000",
+      state: "AM",
+      street: "Rua Izaurina Braga"
+    }}
+    ```
+  """
   def get(input) when is_binary(input) do
     cond do
       cep?(input) -> get_viacep(input)
@@ -14,6 +39,16 @@ defmodule GetGeocode do
     msg_invalid_input()
   end
 
+  @doc """
+  Returns a error `{:error, "Invalid input"}`.
+  Argument must be provided.
+
+  ## Examples
+    ```
+    iex> GetGeocode.get
+    {:error, "Invalid input"}
+    ```
+  """
   def get() do
     msg_invalid_input()
   end

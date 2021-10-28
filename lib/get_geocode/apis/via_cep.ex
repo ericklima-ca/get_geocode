@@ -1,10 +1,31 @@
 defmodule GetGeocode.Apis.ViaCep do
   @moduledoc """
-      ## ViaCEP API
-      From https://viacep.com.br/
+  ViaCEP API.
+  From https://viacep.com.br/.
   """
   @url "https://viacep.com.br/ws"
 
+  @doc """
+  Get data from CEP (brazilian) consuming Via CEP API.
+
+  ## Examples
+
+    ```
+    iex> GetGeocode.Apis.ViaCep.get_cep "69035350"
+    %{
+      "bairro" => "Compensa",
+      "cep" => "69035-350",
+      "complemento" => "",
+      "ddd" => "92",
+      "gia" => "",
+      "ibge" => "1302603",
+      "localidade" => "Manaus",
+      "logradouro" => "Avenida Coronel Cyrillo Neves",
+      "siafi" => "0255",
+      "uf" => "AM"
+    }
+    ```
+  """
   def get_cep(cep) when is_binary(cep) do
     cep_sanitized = sanitize(cep)
 

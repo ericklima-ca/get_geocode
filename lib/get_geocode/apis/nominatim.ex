@@ -1,6 +1,6 @@
 defmodule GetGeocode.Apis.Nominatim do
   @moduledoc """
-  ## Nominatim API.
+  Nominatim API.
   """
   @url "https://nominatim.openstreetmap.org/search?q=<QUERY>&format=json"
 
@@ -10,6 +10,7 @@ defmodule GetGeocode.Apis.Nominatim do
   Results in a list with the data, or a tuple `{:ok, "No result"}`.
 
   ## Examples
+    ```
     iex> GetGeocode.Apis.Nominatim.get_data "Rua Izaurina Braga"
     %{
       "boundingbox" => ["-3.1058605", "-3.105157", "-60.0550895", "-60.0542833"],
@@ -24,6 +25,7 @@ defmodule GetGeocode.Apis.Nominatim do
       "place_id" => 233020447,
       "type" => "residential"
       }
+    ```
   """
   def get_data(addr) do
     {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(gen_query(addr))
