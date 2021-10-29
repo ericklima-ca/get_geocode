@@ -10,7 +10,7 @@ by adding `get_geocode` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:get_geocode, "~> 0.1.0"}
+    {:get_geocode, "~> 0.0.2"}
   ]
 end
 ```
