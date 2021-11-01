@@ -63,7 +63,9 @@ defmodule GetGeocode do
   end
 
   defp get_nominatim(addr) do
-    result = Nominatim.get_data(addr)
+    result =
+      Regex.replace(~r/(.)\1+/, ~s[#{addr}], "\\1")
+      |> Nominatim.get_data()
 
     case result do
       {_, _} -> result

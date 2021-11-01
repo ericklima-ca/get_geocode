@@ -1,29 +1,43 @@
-# TO BE IMPLEMENTED !!!
-# defmodule GetGeocodeCash do
-#   use GenServer
+defmodule GetGeocodeCash do
+  use GenServer
 
-#   def init(state) do
-#     {:ok, state}
-#   end
+  @impl true
+  def init(state) do
+    {:ok, state}
+  end
 
-#   def handle_cast({:store, new_data}, _state) do
-#     {:noreply, new_data}
-#   end
+  @impl true
+  def handle_call({:get, geocode}, _from, state) do
+    result = Map.get(state, geocode.street)
+    {:reply, result, state}
+  end
 
-#   def handle_call({:get, cep}, _from, data) do
-#     result = Map.get(data, cep)
-#     {:reply, result, data}
-#   end
+  @impl true
+  def handle_call(:get_all, _from, state) do
+    {:reply, state, state}
+  end
 
-#   def start_link(state \\ []) do
-#     GenServer.start_link(__MODULE__, state, name: __MODULE__)
-#   end
+  @impl true
+  def handle_cast({:post, geocode}, state) do
+    case Map.has_key?(state, geocode.street) do
+      true -> {:noreply, state}
+      _ -> {:noreply, Map.put(state, geocode.street, geocode)}
+    end
+  end
 
-#   def store(new_data) do
-#     GenServer.cast(__MODULE__, {:store, new_data})
-#   end
+  def start_link() do
+    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
+  end
 
-#   def get(cep) do
-#     GenServer.call(__MODULE__, {:get, cep})
-#   end
-# end
+  def post(geocode) do
+    GenServer.cast(__MODULE__, {:post, geocode})
+  end
+
+  def get(geocode) do
+    GenServer.call(__MODULE__, {:get, geocode})
+  end
+
+  def get_all() do
+    GenServer.call(__MODULE__, :get_all)
+  end
+end
