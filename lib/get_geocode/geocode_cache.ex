@@ -1,4 +1,4 @@
-defmodule GetGeocodeCash do
+defmodule GetGeocodeCache do
   use GenServer
 
   @impl true
