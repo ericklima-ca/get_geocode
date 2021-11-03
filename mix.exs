@@ -33,7 +33,8 @@ defmodule GetGeocode.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
       {:httpoison, "~> 1.8"},
       {:jason, "~> 1.2"},
-      {:ex_doc, "~> 0.25.0", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.25.0", only: :dev, runtime: false},
+      {:nimble_csv, "~> 1.1.0"}
     ]
   end
 
