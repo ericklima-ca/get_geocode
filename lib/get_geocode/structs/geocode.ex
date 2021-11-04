@@ -1,27 +1,28 @@
 defmodule GetGeocode.Geocode do
+  alias GetGeocode.Coords
+
   @moduledoc """
   Geocode struct.
   ```
   %GetGeocode.Geocode{
-    city: nil,
-    full_details: nil,
-    lat: nil,
-    lng: nil,
-    neighborhood: nil,
-    postalcode: nil,
-    state: nil,
-    street: nil
+  city: nil,
+  coords: %GetGeocode.Coords{lat: nil, lng: nil},
+  full_details: nil,
+  neighborhood: nil,
+  postalcode: nil,
+  state: nil,
+  street: nil
   }
   ```
   """
+  @moduledoc since: "0.0.3"
   defstruct [
     :postalcode,
     :street,
     :neighborhood,
     :city,
     :state,
-    :lat,
-    :lng,
-    :full_details
+    :full_details,
+    coords: %Coords{}
   ]
 end
