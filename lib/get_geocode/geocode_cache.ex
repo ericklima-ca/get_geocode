@@ -1,4 +1,4 @@
-defmodule GetGeocodeCache do
+defmodule GetGeocode.Cache do
   use GenServer
 
   @impl true
