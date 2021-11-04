@@ -28,9 +28,9 @@ defmodule GetGeocode.Apis.Nominatim do
     ```
   """
   def get_data(addr) do
-    {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(gen_query(addr))
-
-    result = Jason.decode!(body)
+    result =
+      request(addr)
+      |> Jason.decode!()
 
     case result do
       [] -> {:ok, "No result"}
@@ -38,17 +38,26 @@ defmodule GetGeocode.Apis.Nominatim do
     end
   end
 
-  defp sanitize(query) do
-    query
-    |> String.trim()
-    |> String.replace(" ", "+")
-    |> String.downcase()
+  defp request(data) do
+    {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(sanitize_query(data))
+    body
   end
 
-  defp gen_query(addr) do
-    query_sanitized = sanitize(addr)
+  defp sanitize_query(query) when is_binary(query) do
+    query
+    |> String.trim()
+    |> String.downcase()
+    |> URI.encode()
+    |> gen_query()
+  end
 
+  defp sanitize_query({lat, lng} = _query) do
+    ~s/#{lat},#{lng}/
+    |> gen_query()
+  end
+
+  defp gen_query(query) do
     @url
-    |> String.replace("<QUERY>", query_sanitized)
+    |> String.replace("<QUERY>", query)
   end
 end
