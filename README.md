@@ -1,6 +1,7 @@
 # GetGeocode
 
 ![workflow](https://github.com/ericklima-ca/get_geocode/actions/workflows/elixir.yml/badge.svg)
+[![Hex.pm](https://img.shields.io/hexpm/v/get_geocode)](https://hex.pm/packages/get_geocode)
 
 ## Installation
 
