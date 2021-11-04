@@ -4,7 +4,7 @@ defmodule GetGeocode.MixProject do
   def project do
     [
       app: :get_geocode,
-      version: "0.0.2",
+      version: "0.0.3",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       description: description(),
@@ -33,9 +33,7 @@ defmodule GetGeocode.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
       {:httpoison, "~> 1.8"},
       {:jason, "~> 1.2"},
-      {:ex_doc, "~> 0.25.0", only: :dev, runtime: false},
-      {:nimble_csv, "~> 1.1.0"},
-      {:unidecode, "~> 1.0"}
+      {:ex_doc, "~> 0.25.0", only: :dev, runtime: false}
     ]
   end
 
