@@ -1,6 +1,4 @@
 defmodule GetGeocode do
-  use Application
-
   alias GetGeocode.Apis.{ViaCep, Nominatim}
   alias GetGeocode.{Geocode, Coords}
 
@@ -9,16 +7,6 @@ defmodule GetGeocode do
   """
   @version "0.0.3"
   @moduledoc since: @version
-
-  @doc false
-  def start(_type, _args) do
-    children = [
-      {GetGeocode.Cache, %{}}
-    ]
-
-    opts = [strategy: :one_for_one, name: GetGeocode.Supervisor]
-    Supervisor.start_link(children, opts)
-  end
 
   @doc """
   Gets geodata from `input`.
