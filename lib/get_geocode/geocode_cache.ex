@@ -7,8 +7,8 @@ defmodule GetGeocode.Cache do
   end
 
   @impl true
-  def handle_call({:get, geocode}, _from, state) do
-    result = Map.get(state, geocode.street)
+  def handle_call({:get, street}, _from, state) do
+    result = Map.get(state, street)
     {:reply, result, state}
   end
 
@@ -25,16 +25,16 @@ defmodule GetGeocode.Cache do
     end
   end
 
-  def start_link() do
-    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
+  def start_link(opts \\ %{}) do
+    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  def post(geocode) do
+  def post({_, geocode}) do
     GenServer.cast(__MODULE__, {:post, geocode})
   end
 
-  def get(geocode) do
-    GenServer.call(__MODULE__, {:get, geocode})
+  def get(street) do
+    GenServer.call(__MODULE__, {:get, street})
   end
 
   def get_all() do
