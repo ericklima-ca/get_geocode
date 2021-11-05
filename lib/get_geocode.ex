@@ -1,13 +1,24 @@
 defmodule GetGeocode do
+  use Application
+
   alias GetGeocode.Apis.{ViaCep, Nominatim}
+  alias GetGeocode.Cache
   alias GetGeocode.{Geocode, Coords}
 
   @moduledoc """
   The main module with `get/1` function to retrieve data from CEP (brazilian format), full address format (Nominatim), or a tuple with coordinates `{lat, lng}`.
   """
   @version "0.0.3"
-
   @moduledoc since: @version
+
+  def start(_type, _args) do
+    children = [
+      {GetGeocode.Cache, %{}}
+    ]
+
+    opts = [strategy: :one_for_one, name: GetGeocode.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
 
   @doc """
   Gets geodata from `input`.
