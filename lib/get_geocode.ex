@@ -10,6 +10,7 @@ defmodule GetGeocode do
   @version "0.0.3"
   @moduledoc since: @version
 
+  @doc false
   def start(_type, _args) do
     children = [
       {GetGeocode.Cache, %{}}
