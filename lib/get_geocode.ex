@@ -2,7 +2,6 @@ defmodule GetGeocode do
   use Application
 
   alias GetGeocode.Apis.{ViaCep, Nominatim}
-  alias GetGeocode.Cache
   alias GetGeocode.{Geocode, Coords}
 
   @moduledoc """
