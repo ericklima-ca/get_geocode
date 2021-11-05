@@ -22,7 +22,7 @@ defmodule GetGeocode.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {GetGeocode.Application, []}
+      mod: {GetGeocode, []}
     ]
   end
 
