@@ -1,4 +1,4 @@
-defmodule StructTest do
+defmodule StructGetGeocodeTest do
   @moduledoc """
   ## TODO
   """

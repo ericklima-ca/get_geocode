@@ -1,6 +1,7 @@
 defmodule GetGeocode.Apis.ViaCep do
   @moduledoc """
   ViaCEP API.
+  
   From https://viacep.com.br/.
   """
   @url "https://viacep.com.br/ws"

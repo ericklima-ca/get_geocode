@@ -12,16 +12,6 @@ defmodule GetGeocodeTest do
     assert result.postalcode == "69000-000"
   end
 
-  test "get/1 returning error message" do
-    error = get(1)
-    assert error == {:error, "Invalid input"}
-  end
-
-  test "get/0 returning error message with no input supplied" do
-    error = get()
-    assert error == {:error, "Invalid input"}
-  end
-
   test "get/1 returning 'No result' return from nominatim" do
     error = get("asdasdasd asdasdasd")
     assert error == {:ok, "No result"}
@@ -35,5 +25,10 @@ defmodule GetGeocodeTest do
   test "get/1 returning error 'cause the input is neither cep nor the address " do
     error = get("asdasdasdasdasdasdasdasdasd")
     assert error == {:error, "Invalid input"}
+  end
+
+  test "get/1 with a tuple" do
+    result = get({-3.0999329, -60.0552931})
+    assert {:ok, _} = result
   end
 end

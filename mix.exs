@@ -4,7 +4,7 @@ defmodule GetGeocode.MixProject do
   def project do
     [
       app: :get_geocode,
-      version: "0.0.2",
+      version: "0.0.3",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       description: description(),
@@ -22,7 +22,7 @@ defmodule GetGeocode.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {GetGeocode.Application, []}
+      mod: {GetGeocode, []}
     ]
   end
 
