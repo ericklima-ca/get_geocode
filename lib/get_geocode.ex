@@ -1,6 +1,6 @@
 defmodule GetGeocode do
   alias GetGeocode.Apis.{ViaCep, Nominatim}
-  alias GetGeocode.{Geocode, Coords}
+  alias GetGeocode.{Geocode, Coords, Cache}
 
   @moduledoc """
   The main module with `get/1` function to retrieve data from CEP (brazilian format), full address format (Nominatim), or a tuple with coordinates `{lat, lng}`.
@@ -58,16 +58,28 @@ defmodule GetGeocode do
   """
   @doc since: @version
   def get(input) when is_binary(input) do
-    cond do
-      cep?(input) -> get_viacep(input)
-      addr?(input) -> get_nominatim(input)
-      true -> msg_invalid_input()
+    case Cache.get(input) do
+      nil ->
+        cond do
+          cep?(input) -> get_viacep(input)
+          addr?(input) -> get_nominatim(input)
+          true -> msg_invalid_input()
+        end
+
+      c ->
+        c
     end
   end
 
   def get(coords) when is_tuple(coords) do
-    Nominatim.get_data(coords)
-    |> builder_from_nominatim()
+    case Cache.get(coords) do
+      nil ->
+        Nominatim.get_data(coords)
+        |> builder_from_nominatim(coords)
+
+      c ->
+        c
+    end
   end
 
   defp get_viacep(cep) do
@@ -75,7 +87,7 @@ defmodule GetGeocode do
 
     case result do
       %{"erro" => _} -> msg_invalid_input()
-      _ -> builder_from_viacep(result)
+      _ -> builder_from_viacep(result, cep)
     end
   end
 
@@ -86,7 +98,7 @@ defmodule GetGeocode do
 
     case result do
       {_, _} -> result
-      _ -> builder_from_nominatim(result)
+      _ -> builder_from_nominatim(result, addr)
     end
   end
 
@@ -100,7 +112,7 @@ defmodule GetGeocode do
     |> String.match?(~r/\b([0-9]{5}-?[0-9]{3})$/)
   end
 
-  defp builder_from_viacep(result) do
+  defp builder_from_viacep(result, input) do
     %{
       "bairro" => neighborhood,
       "cep" => postalcode,
@@ -117,22 +129,25 @@ defmodule GetGeocode do
       Regex.replace(~r/(.)\1+/, ~s[#{street},#{neighborhood},#{city}], "\\1")
       |> Nominatim.get_data()
 
-    {:ok,
-     %Geocode{
-       coords: %Coords{
-         lat: lat,
-         lng: lng
-       },
-       postalcode: postalcode,
-       street: street,
-       neighborhood: neighborhood,
-       city: city,
-       state: state,
-       full_details: full_details
-     }}
+    geocode =
+      %Geocode{
+        coords: %Coords{
+          lat: lat,
+          lng: lng
+        },
+        postalcode: postalcode,
+        street: street,
+        neighborhood: neighborhood,
+        city: city,
+        state: state,
+        full_details: full_details
+      }
+
+    Cache.set(input, geocode)
+    {:ok, geocode}
   end
 
-  defp builder_from_nominatim(result) do
+  defp builder_from_nominatim(result, input) do
     %{
       "display_name" => full_details,
       "lat" => lat,
@@ -144,19 +159,22 @@ defmodule GetGeocode do
       |> String.split(",")
       |> Enum.map(fn x -> String.trim(x) end)
 
-    {:ok,
-     %Geocode{
-       coords: %Coords{
-         lat: lat,
-         lng: lng
-       },
-       postalcode: postalcode,
-       street: street,
-       neighborhood: neighborhood,
-       city: city,
-       state: state,
-       full_details: full_details
-     }}
+    geocode =
+      %Geocode{
+        coords: %Coords{
+          lat: lat,
+          lng: lng
+        },
+        postalcode: postalcode,
+        street: street,
+        neighborhood: neighborhood,
+        city: city,
+        state: state,
+        full_details: full_details
+      }
+
+    Cache.set(input, geocode)
+    {:ok, geocode}
   end
 
   defp msg_invalid_input() do

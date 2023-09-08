@@ -20,8 +20,8 @@ defmodule GetGeocode.MixProject do
 
   def application do
     [
-      extra_applications: [:logger]
-      # mod: {GetGeocode, []}
+      extra_applications: [:logger],
+      mod: {GetGeocode.Application, []}
     ]
   end
 
@@ -30,7 +30,8 @@ defmodule GetGeocode.MixProject do
       {:httpoison, "~> 1.8"},
       {:jason, "~> 1.2"},
       {:ex_doc, "~> 0.25.0", only: :dev, runtime: false},
-      {:credo, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:ssl_verify_fun, "~> 1.1.6", manager: :rebar3, override: true}
     ]
   end
 
